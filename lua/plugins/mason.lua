@@ -8,7 +8,7 @@ return {
       ensure_installed = {
         "lua-language-server",
         "pyright",
-        "ruff-lsp",
+        "ruff",
         "stylua",
         "debugpy",
         "tree-sitter-cli",

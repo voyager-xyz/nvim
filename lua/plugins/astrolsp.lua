@@ -20,7 +20,7 @@ return {
       format_on_save = {
         enabled = true, -- enable or disable format on save globally
         allow_filetypes = { -- enable format on save for specified filetypes only
-          -- "go",
+          "python",
         },
         ignore_filetypes = { -- disable format on save for specified filetypes
           -- "python",
@@ -52,12 +52,14 @@ return {
       -- the key is the server that is being setup with `lspconfig`
       -- rust_analyzer = false, -- setting a handler to false will disable the set up of that language server
       -- pyright = function(_, opts) require("lspconfig").pyright.setup(opts) end -- or a custom handler function can be passed
-      ruff_lsp = function(_, opts)
+      ruff = function(_, opts)
+        local on_attach = opts.on_attach
         opts.on_attach = function(client, bufnr)
           -- Disable hover in favor of Pyright
           client.server_capabilities.hoverProvider = false
+          if on_attach then on_attach(client, bufnr) end
         end
-        require("lspconfig").ruff_lsp.setup(opts)
+        require("lspconfig").ruff.setup(opts)
       end,
     },
     -- Configure buffer local auto commands to add when attaching a language server
