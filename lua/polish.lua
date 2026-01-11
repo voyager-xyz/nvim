@@ -47,21 +47,30 @@ end, {
 -- Run tests with args (remembers last args)
 vim.keymap.set("n", "<leader>tR", function()
   local test_cmd = get_test_command()
-  local args = vim.fn.input("Test args: ", last_test_args)
-  last_test_args = args
   
-  local cmd = args ~= "" and test_cmd .. " " .. args or test_cmd
-  local test_terminal = Terminal:new({
-    cmd = cmd,
-    direction = "float",
-    close_on_exit = false,
-    float_opts = {
-      border = "curved",
-      width = math.floor(vim.o.columns * 0.9),
-      height = math.floor(vim.o.lines * 0.9),
-    },
-  })
-  test_terminal:toggle()
+  -- Use vim.ui.input with completion from command history
+  vim.ui.input({
+    prompt = "Test args: ",
+    default = last_test_args,
+    completion = "shellcmd",
+  }, function(args)
+    if args == nil then return end  -- User cancelled
+    
+    last_test_args = args
+    
+    local cmd = args ~= "" and test_cmd .. " " .. args or test_cmd
+    local test_terminal = Terminal:new({
+      cmd = cmd,
+      direction = "float",
+      close_on_exit = false,
+      float_opts = {
+        border = "curved",
+        width = math.floor(vim.o.columns * 0.9),
+        height = math.floor(vim.o.lines * 0.9),
+      },
+    })
+    test_terminal:toggle()
+  end)
 end, {
   noremap = true,
   silent = true,
