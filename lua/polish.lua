@@ -77,6 +77,26 @@ end, {
   desc = "Run tests with args",
 })
 
+-- Add Meh+t keybinding for running tests
+vim.keymap.set("n", "<C-A-S-t>", function()
+  local test_cmd = get_test_command()
+  local test_terminal = Terminal:new({
+    cmd = test_cmd,
+    direction = "float",
+    close_on_exit = false,
+    float_opts = {
+      border = "curved",
+      width = math.floor(vim.o.columns * 0.9),
+      height = math.floor(vim.o.lines * 0.9),
+    },
+  })
+  test_terminal:toggle()
+end, {
+  noremap = true,
+  silent = true,
+  desc = "Run tests (meh+t)",
+})
+
 -- Register with which-key
 local wk_status, wk = pcall(require, "which-key")
 if wk_status then
