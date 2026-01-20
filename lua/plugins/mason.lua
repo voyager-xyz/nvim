@@ -1,5 +1,3 @@
-
-
 ---@type LazySpec
 return {
   {
@@ -12,6 +10,7 @@ return {
         "stylua",
         "debugpy",
         "tree-sitter-cli",
+        "gopls",
       },
     },
   },
