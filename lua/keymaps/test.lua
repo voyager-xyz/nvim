@@ -1,174 +1,70 @@
--- Test keybindings for running tests with toggleterm
-local Terminal = require("toggleterm.terminal").Terminal
+local terminal = require("utils.terminal")
 local test_utils = require("utils.test_command")
 local command_runner = require("utils.command_runner")
-local last_test_args = ""
-local last_custom_command = nil
+local state_manager = require("utils.state")
 
 local M = {}
+local state = {}
+
+local function run_test(args)
+  local test_cmd = test_utils.get_test_command()
+  local cmd = args and args ~= "" and test_cmd .. " " .. args or test_cmd
+  terminal.run_command(cmd, false)
+end
+
+local function run_test_with_args()
+  vim.ui.input({
+    prompt = "Test args: ",
+    default = state.last_test_args or "",
+    completion = "shellcmd",
+  }, function(args)
+    if args == nil then return end
+    state.last_test_args = args
+    state_manager.save(state)
+    run_test(args)
+  end)
+end
+
+local function run_custom_command()
+  command_runner.input_with_history("Run command: ", function(cmd)
+    state.last_custom_command = cmd
+    state_manager.save(state)
+    terminal.run_command(cmd, true)
+  end)
+end
+
+local function run_last_custom_command()
+  local cmd = state.last_custom_command or 'echo "No last command"'
+  terminal.run_command(cmd, true)
+end
 
 function M.setup()
-  -- Run tests with no args
-  vim.keymap.set("n", "<leader>tr", function()
-    local test_cmd = test_utils.get_test_command()
-    local test_terminal = Terminal:new({
-      cmd = test_cmd,
-      direction = "float",
-      close_on_exit = false,
-      float_opts = {
-        border = "curved",
-        width = math.floor(vim.o.columns * 0.9),
-        height = math.floor(vim.o.lines * 0.9),
-      },
+  state = state_manager.load({
+    last_test_args = "",
+    last_custom_command = nil,
+  })
+
+  local keymaps = {
+    { "n", "<leader>tr", function() run_test() end, "Run tests" },
+    { "n", "<leader>tR", run_test_with_args, "Run tests with args" },
+    { "n", "<C-A-S-t>", function() run_test() end, "Run tests (meh+t)" },
+    { "n", "<leader>tc", run_custom_command, "Run custom command" },
+    { "n", "<leader>tC", run_last_custom_command, "Run last custom command" },
+    { "n", "<C-A-S-c>", run_last_custom_command, "Run last custom command (meh+c)" },
+  }
+
+  for _, map in ipairs(keymaps) do
+    vim.keymap.set(map[1], map[2], map[3], {
+      noremap = true,
+      silent = true,
+      desc = map[4],
     })
-    test_terminal:toggle()
-  end, {
-    noremap = true,
-    silent = true,
-    desc = "Run tests",
-  })
-
-  -- Run tests with args (remembers last args)
-  vim.keymap.set("n", "<leader>tR", function()
-    local test_cmd = test_utils.get_test_command()
-    
-    -- Use vim.ui.input with completion from command history
-    vim.ui.input({
-      prompt = "Test args: ",
-      default = last_test_args,
-      completion = "shellcmd",
-    }, function(args)
-      if args == nil then return end  -- User cancelled
-      
-      last_test_args = args
-      
-      local cmd = args ~= "" and test_cmd .. " " .. args or test_cmd
-      local test_terminal = Terminal:new({
-        cmd = cmd,
-        direction = "float",
-        close_on_exit = false,
-        float_opts = {
-          border = "curved",
-          width = math.floor(vim.o.columns * 0.9),
-          height = math.floor(vim.o.lines * 0.9),
-        },
-      })
-      test_terminal:toggle()
-    end)
-  end, {
-    noremap = true,
-    silent = true,
-    desc = "Run tests with args",
-  })
-
-  -- Add Meh+t keybinding for running tests
-  vim.keymap.set("n", "<C-A-S-t>", function()
-    local test_cmd = test_utils.get_test_command()
-    local test_terminal = Terminal:new({
-      cmd = test_cmd,
-      direction = "float",
-      close_on_exit = false,
-      float_opts = {
-        border = "curved",
-        width = math.floor(vim.o.columns * 0.9),
-        height = math.floor(vim.o.lines * 0.9),
-      },
-    })
-    test_terminal:toggle()
-  end, {
-    noremap = true,
-    silent = true,
-    desc = "Run tests (meh+t)",
-  })
-
-  -- Run any command with history
-  vim.keymap.set("n", "<leader>tc", function()
-    command_runner.input_with_history("Run command: ", function(cmd)
-      last_custom_command = cmd
-      local cmd_terminal = Terminal:new({
-        cmd = cmd,
-        direction = "float",
-        close_on_exit = false,
-        float_opts = {
-          border = "curved",
-          width = math.floor(vim.o.columns * 0.9),
-          height = math.floor(vim.o.lines * 0.9),
-        },
-        on_open = function(term)
-          vim.keymap.set("n", "q", function()
-            term:close()
-          end, { buffer = term.bufnr, noremap = true, silent = true })
-        end,
-      })
-      cmd_terminal:toggle()
-    end)
-  end, {
-    noremap = true,
-    silent = true,
-    desc = "Run custom command",
-  })
-
-  -- Run last custom command
-  vim.keymap.set("n", "<leader>tC", function()
-    local cmd = last_custom_command or 'echo "No last command"'
-    local cmd_terminal = Terminal:new({
-      cmd = cmd,
-      direction = "float",
-      close_on_exit = false,
-      float_opts = {
-        border = "curved",
-        width = math.floor(vim.o.columns * 0.9),
-        height = math.floor(vim.o.lines * 0.9),
-      },
-      on_open = function(term)
-        vim.keymap.set("n", "q", function()
-          term:close()
-        end, { buffer = term.bufnr, noremap = true, silent = true })
-      end,
-    })
-    cmd_terminal:toggle()
-  end, {
-    noremap = true,
-    silent = true,
-    desc = "Run last custom command",
-  })
-
-  -- Add Meh+c keybinding for running custom commands
-  vim.keymap.set("n", "<C-A-S-c>", function()
-    command_runner.input_with_history("Run command: ", function(cmd)
-      local cmd_terminal = Terminal:new({
-        cmd = cmd,
-        direction = "float",
-        close_on_exit = false,
-        float_opts = {
-          border = "curved",
-          width = math.floor(vim.o.columns * 0.9),
-          height = math.floor(vim.o.lines * 0.9),
-        },
-        on_open = function(term)
-          vim.keymap.set("n", "q", function()
-            term:close()
-          end, { buffer = term.bufnr, noremap = true, silent = true })
-        end,
-      })
-      cmd_terminal:toggle()
-    end)
-  end, {
-    noremap = true,
-    silent = true,
-    desc = "Run custom command (meh+c)",
-  })
+  end
 
   -- Register with which-key
-  local wk_status, wk = pcall(require, "which-key")
-  if wk_status then
-    wk.add({
-      { "<leader>tr", desc = "Run tests" },
-      { "<leader>tc", desc = "Run custom command" },
-      { "<leader>tR", desc = "Run tests with args" },
-      { "<leader>tC", desc = "Run last custom command" },
-
-    })
+  local ok, wk = pcall(require, "which-key")
+  if ok then
+    wk.add(vim.tbl_map(function(m) return { m[2], desc = m[4] } end, keymaps))
   end
 end
 
