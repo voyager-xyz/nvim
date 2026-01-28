@@ -11,6 +11,16 @@ return {
               function() require("flash").jump() end,
               desc = "Flash",
             },
+            ["<leader>s"] = {
+              function()
+                require("flash").jump({
+                  search = { mode = "search", max_length = 0 },
+                  label = { after = { 0, 0 } },
+                  pattern = "^",
+                })
+              end,
+              desc = "Flash Line Start",
+            },
             ["R"] = {
               function() require("flash").treesitter_search() end,
               desc = "Treesitter Search",
@@ -29,6 +39,16 @@ return {
               function() require("flash").treesitter_search() end,
               desc = "Treesitter Search",
             },
+            ["<leader>s"] = {
+              function()
+                require("flash").jump({
+                  search = { mode = "search", max_length = 0 },
+                  label = { after = { 0, 0 } },
+                  pattern = "^",
+                })
+              end,
+              desc = "Flash Line Start",
+            },
             ["s"] = {
               function() require("flash").jump() end,
               desc = "Flash",
@@ -42,6 +62,16 @@ return {
             ["s"] = {
               function() require("flash").jump() end,
               desc = "Flash",
+            },
+            ["<leader>s"] = {
+              function()
+                require("flash").jump({
+                  search = { mode = "search", max_length = 0 },
+                  label = { after = { 0, 0 } },
+                  pattern = "^",
+                })
+              end,
+              desc = "Flash Line Start",
             },
             ["S"] = {
               function() require("flash").treesitter() end,
