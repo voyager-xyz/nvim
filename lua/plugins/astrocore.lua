@@ -60,6 +60,18 @@ return {
 
         ["<C-d>"] = { "<C-d>zz", desc = "Half-page down and center" },
         ["<C-u>"] = { "<C-u>zz", desc = "Half-page up and center" },
+        ["<C-A-S-l>"] = {
+          function()
+            local ok, snacks = pcall(require, "snacks")
+            if ok and snacks.picker and snacks.picker.lsp_symbols then
+              snacks.picker.lsp_symbols()
+              return
+            end
+            local keys = vim.api.nvim_replace_termcodes("<Leader>ls", true, false, true)
+            vim.api.nvim_feedkeys(keys, "n", false)
+          end,
+          desc = "Symbols (meh+l)",
+        },
 
         -- navigate buffer tabs
         ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
