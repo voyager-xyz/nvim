@@ -58,6 +58,9 @@ return {
       n = {
         -- second key is the lefthand side of the map
 
+        ["<C-d>"] = { "<C-d>zz", desc = "Half-page down and center" },
+        ["<C-u>"] = { "<C-u>zz", desc = "Half-page up and center" },
+
         -- navigate buffer tabs
         ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
         ["[b"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
