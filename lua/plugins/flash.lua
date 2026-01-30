@@ -63,6 +63,22 @@ return {
               function() require("flash").jump() end,
               desc = "Flash",
             },
+            ["<C-A-S-s>"] = {
+              function()
+                local start_pos = vim.api.nvim_win_get_cursor(0)
+                require("flash").jump({
+                  search = { mode = "search", max_length = 2 },
+                  action = function(match)
+                    local length = match.len or (match.text and #match.text) or 1
+                    local end_pos = match.end_pos or { match.pos[1], match.pos[2] + length - 1 }
+                    vim.api.nvim_win_set_cursor(0, start_pos)
+                    vim.cmd("normal! v")
+                    vim.api.nvim_win_set_cursor(0, end_pos)
+                  end,
+                })
+              end,
+              desc = "Flash select to match (meh+s)",
+            },
             ["<leader>s"] = {
               function()
                 require("flash").jump({
