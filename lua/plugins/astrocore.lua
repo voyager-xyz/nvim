@@ -72,6 +72,7 @@ return {
           end,
           desc = "Symbols (meh+l)",
         },
+        ["<C-A-S-z>"] = { "<Cmd>ZenMode<CR>", desc = "Toggle Zen Mode (meh+z)" },
 
         -- navigate buffer tabs
         ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
@@ -94,6 +95,9 @@ return {
 
         -- setting a mapping to false will disable it
         -- ["<C-S>"] = false,
+      },
+      v = {
+        ["<C-A-S-x>"] = { "x", desc = "Cut selection (meh+x)" },
       },
     },
   },
