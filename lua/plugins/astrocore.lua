@@ -74,6 +74,7 @@ return {
         ["<C-A-S-z>"] = { "<Cmd>ZenMode<CR>", desc = "Toggle Zen Mode (meh+z)" },
         ["<C-A-S-a>"] = { "ggVG", desc = "Select all (meh+a)" },
         ["<C-A-S-p>"] = { "vip", desc = "Select paragraph (meh+p)" },
+        ["<C-A-S-w>"] = { "j^", desc = "Start of next line (meh+w)" },
         ["<C-A-S-d>"] = {
           function()
             local word = vim.fn.expand("<cword>")
@@ -131,6 +132,8 @@ return {
         -- navigate buffer tabs
         ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
         ["[b"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
+        ["<C-A-S-b>"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer (meh+b)" },
+        ["<C-A-S-n>"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer (meh+n)" },
         ["<C-A-S-j>"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer (meh+j)" },
 
         -- mappings seen under group name "Buffer"
