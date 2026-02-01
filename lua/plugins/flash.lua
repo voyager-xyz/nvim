@@ -63,6 +63,16 @@ return {
               function() require("flash").jump() end,
               desc = "Flash",
             },
+            ["<C-A-S-g>"] = {
+              function()
+                require("flash").jump({
+                  search = { mode = "search", max_length = 0 },
+                  label = { after = { 0, 0 } },
+                  pattern = "^",
+                })
+              end,
+              desc = "Flash Line Start (meh+g)",
+            },
             ["<C-A-S-s>"] = {
               function()
                 local start_pos = vim.api.nvim_win_get_cursor(0)
