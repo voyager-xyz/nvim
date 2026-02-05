@@ -1,6 +1,17 @@
 return {
   "michaelb/sniprun",
-  opts = {},
+  opts = {
+    -- display = { "Terminal" },
+    interpreter_options = {
+      Generic = {
+        Kotlin_Script = {
+          supported_filetypes = { "kotlin" },
+          extension = ".kts",             -- Force temp file to be .kts
+          interpreter = "kotlinc -script", -- Run as a script
+        },
+      },
+    },
+  },
   build = "bash ./install.sh 1",
   cmd = "SnipRun",
   keys = {
