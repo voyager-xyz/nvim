@@ -1,7 +1,8 @@
 return {
   "michaelb/sniprun",
   opts = {
-    -- display = { "Terminal" },
+    -- Classic, VirtualTextOk, VirtualText, VirtualLine, TempFloatingWindow, LongTempFloatingWindow, Terminal, TerminalWithCode, NvimNotify, Api      
+    -- display = { "Terminal" }, 
     interpreter_options = {
       Generic = {
         Kotlin_Script = {
