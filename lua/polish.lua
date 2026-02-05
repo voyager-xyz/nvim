@@ -50,3 +50,12 @@ vim.api.nvim_create_autocmd("VimEnter", {
   end,
   once = true,
 })
+
+vim.keymap.set({"n", "x", "o"}, "<c-space>", function()
+  require("flash").treesitter({
+    actions = {
+      ["<c-space>"] = "next",
+      ["<BS>"] = "prev"
+    }
+  })
+end, { desc = "Treesitter incremental selection" })
