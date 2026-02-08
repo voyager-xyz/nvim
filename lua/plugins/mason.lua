@@ -7,6 +7,8 @@ return {
         "lua-language-server",
         "pyright",
         "ruff",
+        "kotlin-language-server",
+        "typescript-language-server",
         "stylua",
         "debugpy",
         "tree-sitter-cli",
