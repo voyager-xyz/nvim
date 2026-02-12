@@ -37,19 +37,30 @@ end
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     local argv = vim.fn.argv()
     if #argv == 0 then
-      require("yazi").yazi()
+      Snacks.picker.smart()
     elseif #argv == 1 and vim.fn.isdirectory(argv[1]) == 1 then
-      vim.cmd("bd") -- close directory buffer
-      require("yazi").yazi(nil, argv[1])
+      vim.cmd("bd") -- Close the default directory listing buffer (netrw/neo-tree)
+      Snacks.picker.smart()
     end
   end,
   once = true,
 })
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--   callback = function()
+--     local argv = vim.fn.argv()
+--     if #argv == 0 then
+--       require("yazi").yazi()
+--     elseif #argv == 1 and vim.fn.isdirectory(argv[1]) == 1 then
+--       vim.cmd("bd") -- close directory buffer
+--       require("yazi").yazi(nil, argv[1])
+--     end
+--   end,
+--   once = true,
+-- })
 
 vim.keymap.set({"n", "x", "o"}, "<c-space>", function()
   require("flash").treesitter({
