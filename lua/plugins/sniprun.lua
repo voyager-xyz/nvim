@@ -5,6 +5,11 @@ return {
     -- display = { "Terminal" }, 
     interpreter_options = {
       Generic = {
+Lua_System = {
+          supported_filetypes = { "lua" },
+          extension = ".lua",
+          interpreter = "lua", -- Replace with "luajit" if you prefer
+        },
         Kotlin_Script = {
           supported_filetypes = { "kotlin" },
           extension = ".kts",             -- Force temp file to be .kts
