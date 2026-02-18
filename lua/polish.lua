@@ -37,18 +37,18 @@ end
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-vim.api.nvim_create_autocmd("VimEnter", {
-  callback = function()
-    local argv = vim.fn.argv()
-    if #argv == 0 then
-      Snacks.picker.smart()
-    elseif #argv == 1 and vim.fn.isdirectory(argv[1]) == 1 then
-      vim.cmd("bd") -- Close the default directory listing buffer (netrw/neo-tree)
-      Snacks.picker.smart()
-    end
-  end,
-  once = true,
-})
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--   callback = function()
+--     local argv = vim.fn.argv()
+--     if #argv == 0 then
+--       Snacks.picker.smart()
+--     elseif #argv == 1 and vim.fn.isdirectory(argv[1]) == 1 then
+--       vim.cmd("bd") -- Close the default directory listing buffer (netrw/neo-tree)
+--       Snacks.picker.smart()
+--     end
+--   end,
+--   once = true,
+-- })
 -- vim.api.nvim_create_autocmd("VimEnter", {
 --   callback = function()
 --     local argv = vim.fn.argv()
