@@ -22,6 +22,25 @@ if not pcall(require, "lazy") then
   vim.fn.getchar()
   vim.cmd.quit()
 end
+vim.cmd([[
+  let &t_TI = "\<Esc>[>4;2m"
+  let &t_TE = "\<Esc>[>4;m"
+]])
 
+-- Enable kitty keyboard protocol for proper Ctrl+Alt+Shift support
+-- This must be done before loading plugins
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    -- Enable kitty keyboard protocol (CSI u mode)
+    io.stdout:write("\x1b[>1u")
+  end,
+})
+
+vim.api.nvim_create_autocmd("VimLeave", {
+  callback = function()
+    -- Disable kitty keyboard protocol on exit
+    io.stdout:write("\x1b[<1u")
+  end,
+})
 require "lazy_setup"
 require "polish"
