@@ -7,6 +7,7 @@ return {
         "lua-language-server",
         "pyright",
         "ruff",
+        "standardrb",
         "kotlin-language-server",
         "typescript-language-server",
         "stylua",
