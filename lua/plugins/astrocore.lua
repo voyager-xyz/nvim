@@ -78,6 +78,7 @@ return {
         ["<C-A-S-d>"] = {
           function()
             local word = vim.fn.expand("<cword>")
+            print('DEBUGPRINT[6]: astrocore.lua:80: local=' .. vim.inspect(local))
             if word == nil or word == "" then
               vim.notify("Cursor must be under the cursor", vim.log.levels.ERROR)
               return
@@ -130,11 +131,8 @@ return {
         },
 
         -- navigate buffer tabs
-        ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
-        ["[b"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
-        ["<C-A-S-b>"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer (meh+b)" },
-        ["<C-A-S-n>"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer (meh+n)" },
-        ["<C-A-S-j>"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer (meh+j)" },
+        ["<C-A-S-n>"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer (meh+b)" },
+        ["<C-A-S-b>"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer (meh+n)" },
 
         -- mappings seen under group name "Buffer"
         ["<Leader>bd"] = {
@@ -164,6 +162,7 @@ return {
           end,
           desc = "Find buffers",
         },
+
         ["<Leader>uT"] = {
           function()
             local ok_lazy, lazy = pcall(require, "lazy")
