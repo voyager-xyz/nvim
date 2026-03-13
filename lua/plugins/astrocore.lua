@@ -78,7 +78,6 @@ return {
         ["<C-A-S-d>"] = {
           function()
             local word = vim.fn.expand("<cword>")
-            print('DEBUGPRINT[6]: astrocore.lua:80: local=' .. vim.inspect(local))
             if word == nil or word == "" then
               vim.notify("Cursor must be under the cursor", vim.log.levels.ERROR)
               return
@@ -131,8 +130,91 @@ return {
         },
 
         -- navigate buffer tabs
+        ["<C-A-S-m>"] = { "<cmd>Grapple toggle_tags<CR>", desc = "Grapple menu (meh+m)" },
+        ["<C-A-S-d>"] = {
+          function()
+            local ok, snacks = pcall(require, "snacks")
+            if ok and snacks.picker and snacks.picker.marks then
+              snacks.picker.marks({
+                transform = function(item)
+                  if item.label and item.label:match("^%a$") then
+                    return item
+                  end
+                  return false
+                end,
+                on_show = function(picker)
+                  for c = string.byte("a"), string.byte("z") do
+                    local letter = string.char(c)
+                    for _, l in ipairs({ letter, letter:upper() }) do
+                      vim.keymap.set("n", l, function()
+                        for _, item in ipairs(picker:items()) do
+                          if item.label == l then
+                            picker:action("confirm", item)
+                            vim.cmd("normal! zz")
+                            return
+                          end
+                        end
+                      end, { buffer = picker.list.win.buf, nowait = true })
+                    end
+                  end
+                end,
+              })
+              return
+            end
+            local keys = vim.api.nvim_replace_termcodes("<Leader>sm", true, false, true)
+            vim.api.nvim_feedkeys(keys, "n", false)
+          end,
+          desc = "Find letter marks (meh+d)",
+        },
+        ["<C-A-S-w>"] = {
+          function()
+            local ok, snacks = pcall(require, "snacks")
+            if ok and snacks.picker and snacks.picker.grep then
+              snacks.picker.grep()
+              return
+            end
+            local keys = vim.api.nvim_replace_termcodes("<Leader>fw", true, false, true)
+            vim.api.nvim_feedkeys(keys, "n", false)
+          end,
+          desc = "Find words (meh+w)",
+        },
+        ["<C-A-S-s>"] = {
+          function()
+            local ok, snacks = pcall(require, "snacks")
+            if ok and snacks.picker and snacks.picker.smart then
+              snacks.picker.smart()
+              return
+            end
+            local keys = vim.api.nvim_replace_termcodes("<Leader>ff", true, false, true)
+            vim.api.nvim_feedkeys(keys, "n", false)
+          end,
+          desc = "Smart find (meh+s)",
+        },
+        ["<C-A-S-f>"] = {
+          function()
+            local ok, snacks = pcall(require, "snacks")
+            if ok and snacks.picker and snacks.picker.files then
+              snacks.picker.files()
+              return
+            end
+            local keys = vim.api.nvim_replace_termcodes("<Leader>ff", true, false, true)
+            vim.api.nvim_feedkeys(keys, "n", false)
+          end,
+          desc = "Find files (meh+f)",
+        },
         ["<C-A-S-n>"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer (meh+b)" },
-        ["<C-A-S-b>"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer (meh+n)" },
+        ["<C-A-S-b>"] = {
+          function()
+            local ok, snacks = pcall(require, "snacks")
+            if ok and snacks.picker and snacks.picker.buffers then
+              snacks.picker.buffers({ focus = "list" })
+              return
+            end
+            local keys = vim.api.nvim_replace_termcodes("<Leader>bb", true, false, true)
+            vim.api.nvim_feedkeys(keys, "n", false)
+          end,
+          desc = "Find buffers (meh+b)",
+        },
 
         -- mappings seen under group name "Buffer"
         ["<Leader>bd"] = {

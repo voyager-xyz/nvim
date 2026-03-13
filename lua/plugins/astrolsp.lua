@@ -22,6 +22,7 @@ return {
         allow_filetypes = { -- enable format on save for specified filetypes only
           "python",
           "go",
+          "kotlin",
         },
         ignore_filetypes = { -- disable format on save for specified filetypes
           -- "python",
@@ -66,6 +67,18 @@ return {
     -- Configure buffer local auto commands to add when attaching a language server
     autocmds = {
       -- first key is the `augroup` to add the auto commands to (:h augroup)
+      format_on_escape = {
+        {
+          event = "InsertLeave",
+          desc = "Format buffer on leaving insert mode",
+          callback = function(args)
+            local bufnr = args.buf
+            local ft = vim.bo[bufnr].filetype
+            local allowed = { python = true, go = true, kotlin = true }
+            if allowed[ft] then vim.lsp.buf.format { bufnr = bufnr, async = true } end
+          end,
+        },
+      },
       lsp_codelens_refresh = {
         -- Optional condition to create/delete auto command group
         -- can either be a string of a client capability or a function of `fun(client, bufnr): boolean`
