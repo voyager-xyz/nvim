@@ -207,7 +207,21 @@ return {
           function()
             local ok, snacks = pcall(require, "snacks")
             if ok and snacks.picker and snacks.picker.buffers then
-              snacks.picker.buffers({ focus = "list" })
+              snacks.picker.buffers({
+                focus = "list",
+                win = {
+                  input = {
+                    keys = {
+                      ["<C-A-S-b>"] = { "list_down", mode = { "i", "n" } },
+                    },
+                  },
+                  list = {
+                    keys = {
+                      ["<C-A-S-b>"] = { "list_down", mode = { "i", "n" } },
+                    },
+                  },
+                },
+              })
               return
             end
             local keys = vim.api.nvim_replace_termcodes("<Leader>bb", true, false, true)
