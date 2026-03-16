@@ -31,6 +31,7 @@ return {
       disabled = { -- disable formatting capabilities for the listed language servers
         -- disable lua_ls formatting capability if you want to use StyLua to format your lua code
         -- "lua_ls",
+        "kotlin_language_server",
       },
       timeout_ms = 1000, -- default format timeout
       -- filter = function(client) -- fully override the default formatting function
@@ -45,6 +46,19 @@ return {
     ---@diagnostic disable: missing-fields
     config = {
       -- clangd = { capabilities = { offsetEncoding = "utf-8" } },
+      yamlls = {
+        settings = {
+          yaml = {
+            schemas = {
+              ["https://api.cerbos.dev/latest/cerbos/policy/v1/Policy.schema.json"] = "/cerbos/*",
+              ["https://api.cerbos.dev/latest/cerbos/policy/v1/TestSuite.schema.json"] = "/cerbos/**/*_test.yaml",
+              ["https://api.cerbos.dev/latest/cerbos/policy/v1/TestFixture/Resources.schema.json"] = "/cerbos/**/testdata/resources.yaml",
+              ["https://api.cerbos.dev/latest/cerbos/policy/v1/TestFixture/Principals.schema.json"] = "/cerbos/**/testdata/principals.yaml",
+              ["https://api.cerbos.dev/latest/cerbos/policy/v1/TestFixture/AuxData.schema.json"] = "/cerbos/**/testdata/auxdata.yaml",
+            },
+          },
+        },
+      },
     },
     -- customize how language servers are attached
     handlers = {
@@ -74,7 +88,7 @@ return {
           callback = function(args)
             local bufnr = args.buf
             local ft = vim.bo[bufnr].filetype
-            local allowed = { python = true, go = true, kotlin = true }
+            local allowed = { python = true, go = true }
             if allowed[ft] then vim.lsp.buf.format { bufnr = bufnr, async = true } end
           end,
         },

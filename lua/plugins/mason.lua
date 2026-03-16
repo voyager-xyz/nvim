@@ -14,6 +14,7 @@ return {
         "debugpy",
         "tree-sitter-cli",
         "gopls",
+        "yaml-language-server",
       },
     },
   },

@@ -14,7 +14,7 @@ return {
             callback = function()
               -- Save global autoformat status
               vim.g.OLD_AUTOFORMAT = vim.g.autoformat
-              if vim.bo.filetype ~= "kotlin" then vim.g.autoformat = false end
+              vim.g.autoformat = false
 
               local old_autoformat_buffers = {}
               -- Disable all manually enabled buffers
