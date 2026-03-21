@@ -13,14 +13,14 @@ return {
       large_buf = { size = 1024 * 256, lines = 10000 }, -- set global limits for large files for disabling features like treesitter
       autopairs = true, -- enable autopairs at start
       cmp = true, -- enable completion at start
-      diagnostics = { virtual_text = true, virtual_lines = false }, -- diagnostic settings on startup
+      diagnostics = { virtual_text = false, virtual_lines = false }, -- diagnostic settings on startup
       highlighturl = true, -- highlight URLs at start
       notifications = true, -- enable notifications at start
     },
     -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
     --
     diagnostics = {
-      virtual_text = true,
+      virtual_text = false,
       underline = true,
     },
     -- passed to `vim.filetype.add`
@@ -73,8 +73,6 @@ return {
         },
         ["<C-A-S-z>"] = { "<Cmd>ZenMode<CR>", desc = "Toggle Zen Mode (meh+z)" },
         ["<C-A-S-a>"] = { "ggVG", desc = "Select all (meh+a)" },
-        ["<C-A-S-p>"] = { "vip", desc = "Select paragraph (meh+p)" },
-        ["<C-A-S-w>"] = { "j^", desc = "Start of next line (meh+w)" },
         ["<C-A-S-d>"] = {
           function()
             local word = vim.fn.expand("<cword>")
@@ -202,7 +200,8 @@ return {
           end,
           desc = "Find files (meh+f)",
         },
-        ["<C-A-S-n>"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer (meh+b)" },
+        ["<C-A-S-l>"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer (meh+b)" },
+        ["<C-A-S-h>"] = { function() require("astrocore.buffer").nav(-(vim.v.count1)) end, desc = "Previous buffer (meh+h)" },
         ["<C-A-S-b>"] = {
           function()
             local ok, snacks = pcall(require, "snacks")
