@@ -92,5 +92,9 @@ return {
       },
     },
   },
-  opts = {},
+  opts = {
+    modes = {
+      char = { highlight = { backdrop = false, matches = false } },
+    },
+  },
 }
