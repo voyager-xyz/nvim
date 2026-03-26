@@ -17,6 +17,7 @@ return {
       map("n", "<leader>mt", "<cmd>Grapple toggle<CR>", opts)
       map("n", "<leader>mn", "<cmd>Grapple cycle forward<CR>", opts)
       map("n", "<leader>mp", "<cmd>Grapple cycle backward<CR>", opts)
+      map("n", "<leader>mx", "<cmd>Grapple reset<CR>", opts)
     end,
   },
 }

@@ -176,6 +176,17 @@ return {
           end,
           desc = "Find words (meh+w)",
         },
+        ["<C-A-S-;>"] = {
+          function()
+            local pattern = vim.fn.input("Glob pattern: ")
+            if pattern == "" then return end
+            local ok, snacks = pcall(require, "snacks")
+            if ok and snacks.picker and snacks.picker.grep then
+              snacks.picker.grep({ glob = pattern })
+            end
+          end,
+          desc = "Find words by glob (meh+;)",
+        },
         ["<C-A-S-s>"] = {
           function()
             local ok, snacks = pcall(require, "snacks")
@@ -237,6 +248,11 @@ return {
             )
           end,
           desc = "Close buffer from tabline",
+        },
+
+        ["<Leader>bo"] = {
+          function() require("astrocore.buffer").close_all(true) end,
+          desc = "Close all buffers except current",
         },
 
         -- tables with just a `desc` key will be registered with which-key if it's installed
