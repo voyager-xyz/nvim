@@ -71,61 +71,7 @@ return {
           end,
           desc = "Symbols (meh+l)",
         },
-        ["<C-A-S-z>"] = { "<Cmd>ZenMode<CR>", desc = "Toggle Zen Mode (meh+z)" },
         ["<C-A-S-a>"] = { "ggVG", desc = "Select all (meh+a)" },
-        ["<C-A-S-d>"] = {
-          function()
-            local word = vim.fn.expand("<cword>")
-            if word == nil or word == "" then
-              vim.notify("Cursor must be under the cursor", vim.log.levels.ERROR)
-              return
-            end
-            if vim.bo.filetype == "go" then
-              local bufnr = vim.api.nvim_get_current_buf()
-              local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-              local has_os = false
-              local import_block_start = nil
-              local import_block_end = nil
-
-              for i, line in ipairs(lines) do
-                if line:match('^%s*import%s+"os"') or line:match('^%s*"os"%s*$') then
-                  has_os = true
-                  break
-                end
-              end
-
-              if not has_os then
-                for i, line in ipairs(lines) do
-                  if line:match("^%s*import%s*%(") then
-                    import_block_start = i
-                    for j = i + 1, #lines do
-                      if lines[j]:match("^%s*%)%s*$") then
-                        import_block_end = j
-                        break
-                      end
-                    end
-                    break
-                  end
-                end
-
-                if import_block_start and import_block_end then
-                  vim.api.nvim_buf_set_lines(bufnr, import_block_start, import_block_start, false, { "\t\"os\"" })
-                else
-                  for i, line in ipairs(lines) do
-                    if line:match("^%s*package%s+%S+") then
-                      vim.api.nvim_buf_set_lines(bufnr, i, i, false, { "", "import (", "\t\"os\"", ")" })
-                      break
-                    end
-                  end
-                end
-              end
-            end
-            vim.cmd "normal! viw"
-            local keys = vim.api.nvim_replace_termcodes("g?v", true, false, true)
-            vim.api.nvim_feedkeys(keys, "x", false)
-          end,
-          desc = "Debugprint variable below (meh+D)",
-        },
 
         -- navigate buffer tabs
         ["<C-A-S-m>"] = { "<cmd>Grapple toggle_tags<CR>", desc = "Grapple menu (meh+m)" },
