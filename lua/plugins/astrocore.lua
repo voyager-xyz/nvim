@@ -62,14 +62,35 @@ return {
         ["<C-A-S-o>"] = {
           function()
             local ok, snacks = pcall(require, "snacks")
-            if ok and snacks.picker and snacks.picker.lsp_symbols then
-              snacks.picker.lsp_symbols()
-              return
-            end
-            local keys = vim.api.nvim_replace_termcodes("<Leader>ls", true, false, true)
-            vim.api.nvim_feedkeys(keys, "n", false)
+            if not ok or not snacks.picker then return end
+            local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+            if not git_root or git_root == "" then git_root = vim.fn.getcwd() end
+            snacks.picker.pick({
+              title = "Directories",
+              finder = function(_, ctx)
+                local items = {}
+                local output = vim.fn.systemlist("fd --type d --hidden --exclude .git . " .. vim.fn.shellescape(git_root))
+                if vim.v.shell_error ~= 0 then
+                  output = vim.fn.systemlist("find " .. vim.fn.shellescape(git_root) .. " -type d -not -path '*/.git/*'")
+                end
+                for _, path in ipairs(output) do
+                  local rel = path:sub(#git_root + 2)
+                  table.insert(items, {
+                    text = rel,
+                    file = path,
+                    _path = path,
+                  })
+                end
+                return items
+              end,
+              format = function(item) return { { item.text } } end,
+              confirm = function(picker, item)
+                picker:close()
+                if item then require("oil").open(item._path) end
+              end,
+            })
           end,
-          desc = "Symbols (meh+l)",
+          desc = "Open directory in Oil (meh+o)",
         },
         ["<C-A-S-a>"] = { "ggVG", desc = "Select all (meh+a)" },
 
